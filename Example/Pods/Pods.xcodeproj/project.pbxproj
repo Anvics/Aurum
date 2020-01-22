@@ -234,14 +234,14 @@
 		193A70B4A91B9371186518C4FC721381 /* LoadingSignal.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LoadingSignal.swift; path = Sources/LoadingSignal.swift; sourceTree = "<group>"; };
 		1A548FD406B4CACDE8EC1576EDF9D9B9 /* ExtendedPatch+Apply.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "ExtendedPatch+Apply.swift"; path = "Sources/Differ/ExtendedPatch+Apply.swift"; sourceTree = "<group>"; };
 		1A6D1B5028B8EA43807B3C69702E8A27 /* NestedExtendedDiff.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NestedExtendedDiff.swift; path = Sources/Differ/NestedExtendedDiff.swift; sourceTree = "<group>"; };
-		1E16AD9223D8AAC500CBB142 /* AurumStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AurumStore.swift; sourceTree = "<group>"; };
-		1E16AD9323D8AAC500CBB142 /* AurumReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AurumReducer.swift; sourceTree = "<group>"; };
-		1E16AD9423D8AAC500CBB142 /* AurumActor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AurumActor.swift; sourceTree = "<group>"; };
-		1E16AD9523D8AAC500CBB142 /* Aurum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Aurum.swift; sourceTree = "<group>"; };
-		1E16AD9623D8AAC500CBB142 /* AurumMiddleware.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AurumMiddleware.swift; sourceTree = "<group>"; };
-		1E16AD9723D8AAC500CBB142 /* AurumModuleConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AurumModuleConfigurator.swift; sourceTree = "<group>"; };
-		1E16AD9823D8AAC500CBB142 /* AurumSimulation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AurumSimulation.swift; sourceTree = "<group>"; };
-		1E16AD9923D8AAC500CBB142 /* AurumController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AurumController.swift; sourceTree = "<group>"; };
+		1E16AD9A23D8AE3B00CBB142 /* AurumReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AurumReducer.swift; path = Aurum/Classes/AurumReducer.swift; sourceTree = "<group>"; };
+		1E16AD9B23D8AE3B00CBB142 /* AurumSimulation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AurumSimulation.swift; path = Aurum/Classes/AurumSimulation.swift; sourceTree = "<group>"; };
+		1E16AD9C23D8AE3B00CBB142 /* Aurum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Aurum.swift; path = Aurum/Classes/Aurum.swift; sourceTree = "<group>"; };
+		1E16AD9D23D8AE3B00CBB142 /* AurumController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AurumController.swift; path = Aurum/Classes/AurumController.swift; sourceTree = "<group>"; };
+		1E16AD9E23D8AE3B00CBB142 /* AurumModuleConfigurator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AurumModuleConfigurator.swift; path = Aurum/Classes/AurumModuleConfigurator.swift; sourceTree = "<group>"; };
+		1E16AD9F23D8AE3B00CBB142 /* AurumActor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AurumActor.swift; path = Aurum/Classes/AurumActor.swift; sourceTree = "<group>"; };
+		1E16ADA023D8AE3B00CBB142 /* AurumStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AurumStore.swift; path = Aurum/Classes/AurumStore.swift; sourceTree = "<group>"; };
+		1E16ADA123D8AE3B00CBB142 /* AurumMiddleware.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AurumMiddleware.swift; path = Aurum/Classes/AurumMiddleware.swift; sourceTree = "<group>"; };
 		1E78E5FC92106B08D34468CF40BCF254 /* ReactiveKit.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = ReactiveKit.modulemap; sourceTree = "<group>"; };
 		20FA217225B82E451C8FC48B5BF67BC9 /* Subscribers.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Subscribers.swift; path = Sources/Subscribers.swift; sourceTree = "<group>"; };
 		212B5192B8D9D652CD1FE4303F9072E1 /* SignalProtocol+Optional.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "SignalProtocol+Optional.swift"; path = "Sources/SignalProtocol+Optional.swift"; sourceTree = "<group>"; };
@@ -445,21 +445,6 @@
 			name = iOS;
 			sourceTree = "<group>";
 		};
-		1E16AD9123D8AAC500CBB142 /* Classes */ = {
-			isa = PBXGroup;
-			children = (
-				1E16AD9523D8AAC500CBB142 /* Aurum.swift */,
-				1E16AD9423D8AAC500CBB142 /* AurumActor.swift */,
-				1E16AD9923D8AAC500CBB142 /* AurumController.swift */,
-				1E16AD9623D8AAC500CBB142 /* AurumMiddleware.swift */,
-				1E16AD9723D8AAC500CBB142 /* AurumModuleConfigurator.swift */,
-				1E16AD9323D8AAC500CBB142 /* AurumReducer.swift */,
-				1E16AD9823D8AAC500CBB142 /* AurumSimulation.swift */,
-				1E16AD9223D8AAC500CBB142 /* AurumStore.swift */,
-			);
-			path = Classes;
-			sourceTree = "<group>";
-		};
 		4D83B846F1169B3E24E6A03DA2DD26C2 /* Support Files */ = {
 			isa = PBXGroup;
 			children = (
@@ -510,7 +495,14 @@
 		7B7B36C9465103DAB3F551990B8FF7E8 /* Aurum */ = {
 			isa = PBXGroup;
 			children = (
-				1E16AD9123D8AAC500CBB142 /* Classes */,
+				1E16AD9C23D8AE3B00CBB142 /* Aurum.swift */,
+				1E16AD9F23D8AE3B00CBB142 /* AurumActor.swift */,
+				1E16AD9D23D8AE3B00CBB142 /* AurumController.swift */,
+				1E16ADA123D8AE3B00CBB142 /* AurumMiddleware.swift */,
+				1E16AD9E23D8AE3B00CBB142 /* AurumModuleConfigurator.swift */,
+				1E16AD9A23D8AE3B00CBB142 /* AurumReducer.swift */,
+				1E16AD9B23D8AE3B00CBB142 /* AurumSimulation.swift */,
+				1E16ADA023D8AE3B00CBB142 /* AurumStore.swift */,
 				E26CE0FADA9842D9D07C7EA558528D6A /* Pod */,
 				C2D4208909963C215F9944A72A04F51E /* Support Files */,
 			);
