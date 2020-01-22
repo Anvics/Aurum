@@ -1,0 +1,6 @@
+framework module Aurum {
+  umbrella header "Aurum-umbrella.h"
+
+  export *
+  module * { export * }
+}

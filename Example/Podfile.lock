@@ -1,0 +1,32 @@
+PODS:
+  - Aurum (0.1.0):
+    - Bond
+  - Bond (7.6.1):
+    - Differ (~> 1.4)
+    - ReactiveKit (~> 3.14)
+  - Differ (1.4.3)
+  - ReactiveKit (3.14.2)
+
+DEPENDENCIES:
+  - Aurum (from `../`)
+  - Bond
+
+SPEC REPOS:
+  trunk:
+    - Bond
+    - Differ
+    - ReactiveKit
+
+EXTERNAL SOURCES:
+  Aurum:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  Aurum: f64aef338d80a3f9af141115fef80bddf37e4616
+  Bond: 8aed9330723da630fccacf745d7fcbf58182d0df
+  Differ: 6c7477d6187e8c36d02ec342a3c321061b85a0ea
+  ReactiveKit: 4eb12752ff26065207f7cd9b7a0df571916a6990
+
+PODFILE CHECKSUM: 29acb37fece62af9cee22abffe18b3fcfaba7238
+
+COCOAPODS: 1.8.4
