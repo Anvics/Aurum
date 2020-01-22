@@ -1,0 +1,6 @@
+use_frameworks!
+target 'Aurum_Tests' do
+  pod 'Aurum', :path => '../'
+  
+  
+end
