@@ -36,7 +36,7 @@ extension UIView{
         }
     }
     
-    func unembedAll(){
+    public func unembedAll(){
         embedded.forEach { $0.unembed(shouldModifyEmbedArray: false) }
         embedded = []
     }
