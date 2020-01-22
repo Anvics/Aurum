@@ -27,7 +27,7 @@ public protocol AurumModuleConfigurator {
     func didLoad<A: Actor>(actor: A)
 }
 
-extension AurumModuleConfigurator{
+public extension AurumModuleConfigurator{
     func didLoad<A: Actor>(actor: A){ }
     
     func create(data: RequiredData, rootController: UIViewController? = nil, outputListener: ((OutputAction) -> Void)? = nil) -> AurumModuleData<InputAction>{
@@ -45,7 +45,7 @@ extension AurumModuleConfigurator{
         
 }
 
-extension AurumModuleConfigurator where RequiredData == Void{
+public extension AurumModuleConfigurator where RequiredData == Void{
     func create(rootController: UIViewController? = nil, outputListener: ((OutputAction) -> Void)? = nil) -> AurumModuleData<InputAction>{
         return create(data: (), rootController: rootController, outputListener: outputListener)
     }
