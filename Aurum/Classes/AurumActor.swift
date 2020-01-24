@@ -12,12 +12,17 @@ public struct AurumLink{
     let storyboard: String
     let id: String
  
+    public init(storyboard: String, id: String) {
+        self.storyboard = storyboard
+        self.id = id
+    }
+    
     func instantiate() -> UIViewController{
         return UIStoryboard(name: storyboard, bundle: nil).instantiateViewController(withIdentifier: id)
     }
 }
 
-public enum AurumRouteType{
+public enum AurumTransitionType{
     var isEmbedding: Bool{
         switch self {
         case .embed(_), .embedFullscreen, .cleanEmbed(_), .cleanEmbedFullscreen: return true
@@ -70,7 +75,7 @@ public class AurumActor<Action: AurumAction, InputAction: AurumAction, OutputAct
         self.outputReducer = outputReducer
     }
     
-    public func act(_ action: Action){
+    public func reduce(_ action: Action){
         reducer(action)
     }
     
@@ -78,35 +83,35 @@ public class AurumActor<Action: AurumAction, InputAction: AurumAction, OutputAct
         outputReducer(action)
     }
     
-    public func route(to toController: UIViewController, type: AurumRouteType = .show, animated: Bool = true){
-        switch type {
+    public func route(to toController: UIViewController, transition: AurumTransitionType = .show, animated: Bool = true){
+        switch transition {
         case .present: rootController?.present(toController, animated: animated, completion: nil)
         case .push: rootController?.navigationController?.push(toController, animated: animated)
         case .show: rootController?.show(toController, animated: animated)
         case .baseReplace: rootController?.replaceWith(toController, animation: .transitionFlipFromLeft)
         case .replace(let animation): rootController?.replaceWith(toController, animation: animation)
         case .embedFullscreen, .cleanEmbedFullscreen:
-            if type.isCleanEmbedding { controller?.view.unembedAll() }
+            if transition.isCleanEmbedding { controller?.view.unembedAll() }
             if let vc = controller { toController.embedIn(view: vc.view, container: vc) }
         case .embed(let view), .cleanEmbed(let view):
-            if type.isCleanEmbedding { view.unembedAll() }
+            if transition.isCleanEmbedding { view.unembedAll() }
             if let vc = controller { toController.embedIn(view: view, container: vc) }
         }
     }
     
-    public func route(link: AurumLink, type: AurumRouteType = .show, animated: Bool = true){
-        route(to: link.instantiate(), type: type, animated: animated)
+    public func route(link: AurumLink, transition: AurumTransitionType = .show, animated: Bool = true){
+        route(to: link.instantiate(), transition: transition, animated: animated)
     }
     
-    @discardableResult public func route<Module: AurumModuleConfigurator>(module: Module.Type, data: Module.RequiredData, type: AurumRouteType = .show, animated: Bool = true, outputListener: ((Module.OutputAction) -> Void)? = nil) -> AurumModuleData<Module.InputAction>{
+    @discardableResult public func route<Module: AurumModuleConfigurator>(module: Module.Type, data: Module.RequiredData, transition: AurumTransitionType = .show, animated: Bool = true, outputListener: ((Module.OutputAction) -> Void)? = nil) -> AurumModuleData<Module.InputAction>{
         let config = Module()
-        let data = config.create(data: data, rootController: type.isEmbedding ? rootController : nil, outputListener: outputListener)
-        route(to: data.controller, type: type, animated: animated)
+        let data = config.create(data: data, rootController: transition.isEmbedding ? rootController : nil, outputListener: outputListener)
+        route(to: data.controller, transition: transition, animated: animated)
         return data
     }
     
-    @discardableResult public func route<Module: AurumModuleConfigurator>(module: Module.Type, type: AurumRouteType = .show, animated: Bool = true, outputListener: ((Module.OutputAction) -> Void)? = nil) -> AurumModuleData<Module.InputAction> where Module.RequiredData == Void{
-        return route(module: module, data: (), type: type, animated: animated, outputListener: outputListener)
+    @discardableResult public func route<Module: AurumModuleConfigurator>(module: Module.Type, transition: AurumTransitionType = .show, animated: Bool = true, outputListener: ((Module.OutputAction) -> Void)? = nil) -> AurumModuleData<Module.InputAction> where Module.RequiredData == Void{
+        return route(module: module, data: (), transition: transition, animated: animated, outputListener: outputListener)
     }
     
     public func close(type: AurumRouteCloseType = .close, animated: Bool = true){

@@ -11,17 +11,23 @@ import UIKit
 import ReactiveKit
 
 public class AurumStore<State: AurumState, Action: AurumAction>{
-    let state: Property<State>
-    
+    public let state: Property<State>
+    public let reducer = Subject<Action, Never>()
+
     private let reduceAction: (Action) -> Void
     
     init<InputAction: AurumAction, OutputAction: AurumAction>(performer: AurumStorePerformer<State, Action, InputAction, OutputAction>){
         state = performer.state
         reduceAction = performer.reduce
+        subscribe()
     }
     
     func reduce(action: Action){
         reduceAction(action)
+    }
+    
+    func subscribe(){
+        let _ = reducer.observeNext { [weak self] in self?.reduce(action: $0) }
     }
 }
 

@@ -38,7 +38,7 @@ public protocol AurumMiddlwareProvider {
     func provide(forOutputAction action: OutputAction, state: State) -> [AurumMiddleware]
 }
 
-extension AurumMiddlwareProvider{
+public extension AurumMiddlwareProvider{
     func provide(forInputAction action: InputAction, state: State) -> [AurumMiddleware] { return [] }
     func provide(forOutputAction action: OutputAction, state: State) -> [AurumMiddleware] { return [] }
     

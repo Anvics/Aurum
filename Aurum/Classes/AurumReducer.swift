@@ -11,6 +11,7 @@ import Foundation
 public protocol AurumState {}
 
 public protocol AurumAction {}
+public class AurumEmptyAction: AurumAction{}
 
 public protocol AurumReducer {
     associatedtype State: AurumState
@@ -25,7 +26,7 @@ public protocol AurumReducer {
 }
 
 extension AurumReducer{
-    func wrapped() -> AurumReducerWrapper<State, Action, InputAction, OutputAction>{
+    public func wrapped() -> AurumReducerWrapper<State, Action, InputAction, OutputAction>{
         return AurumReducerWrapper(reducer: self)
     }
 }

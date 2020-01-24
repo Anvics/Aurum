@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import Bond
+import ReactiveKit
 
 public protocol AurumStoreSetupable {
     func set<S, A>(store: AurumStore<S, A>)
@@ -18,12 +20,33 @@ public protocol AurumController: class, AurumStoreSetupable {
     var store: AurumStore<State, Action>! { get set }
 }
 
-extension AurumController{
+public extension AurumController{
     func set<S, A>(store: AurumStore<S, A>){
         guard let s = store as? AurumStore<State, Action> else { fatalError("\(type(of: self)) failed to set store: expected <\(State.self), \(Action.self)> got <\(S.self), \(A.self)>") }
         self.store = s
     }
 }
+
+public extension AurumController{
+    var reduce: Subject<Action, Never> { return store.reducer }
+    var state: State { return store.state.value }
+    
+    func field<T: Equatable>(_ extractor: @escaping (State) -> T) -> Signal<T, Never>{
+        return store.state.map(extractor).removeDuplicates()
+    }
+    
+    func reduce(action: Action){
+        store.reduce(action: action)
+    }
+}
+
+
+infix operator ~>
+
+public func ~><T: AurumController>(left: (T, UIButton), right: T.Action){
+    left.1.reactive.tap.replaceElements(with: right).bind(to: left.0.reduce)
+}
+
 
 private var UIView_Associated_Embeded: UInt8 = 0
 extension UIView{
