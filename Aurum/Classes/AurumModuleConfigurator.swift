@@ -23,11 +23,11 @@ public protocol AurumModuleConfigurator {
     
     func initialize(data: RequiredData) -> (State, Reducer, MiddlewareProvider, AurumLink)
 
-    func didLoad<A: Actor>(actor: A)
+    func didLoad<A: Actor>(state: State, actor: A)
 }
 
 public extension AurumModuleConfigurator{
-    func didLoad<A: Actor>(actor: A){ }
+    func didLoad<A: Actor>(state: State, actor: A){ }
     
     func create(data: RequiredData, rootController: UIViewController? = nil, outputListener: ((OutputAction) -> Void)? = nil) -> AurumModuleData<InputAction>{
         let (state, reducer, provider, link) = initialize(data: data)
@@ -37,7 +37,7 @@ public extension AurumModuleConfigurator{
         guard let vcs = vc as? AurumStoreSetupable else { fatalError("\(type(of: vc)) does not conforms to AurumController") }
         vcs.set(store: store.wrapped())
         
-        didLoad(actor: store.actor)
+        didLoad(state: state, actor: store.actor)
         
         return AurumModuleData(controller: vc, inputActionListener: store.inputReduce)
     }
