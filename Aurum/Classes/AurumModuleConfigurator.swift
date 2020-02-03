@@ -36,7 +36,7 @@ public extension AurumModuleConfigurator{
 
         guard let vcs = vc as? AurumStoreSetupable else { fatalError("\(type(of: vc)) does not conforms to AurumController") }
         vcs.set(store: store.wrapped())
-        
+                
         didLoad(state: state, actor: store.actor)
         
         return AurumModuleData(controller: vc, inputActionListener: store.inputReduce)

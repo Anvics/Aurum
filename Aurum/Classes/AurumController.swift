@@ -17,13 +17,16 @@ public protocol AurumStoreSetupable {
 public protocol AurumController: class, AurumStoreSetupable {
     associatedtype State: AurumState
     associatedtype Action: AurumAction
+    
     var store: AurumStore<State, Action>! { get set }
+    var bindings: Bindings<State, Action> { get }
 }
 
 public extension AurumController{
     func set<S, A>(store: AurumStore<S, A>){
         guard let s = store as? AurumStore<State, Action> else { fatalError("\(type(of: self)) failed to set store: expected <\(State.self), \(Action.self)> got <\(S.self), \(A.self)>") }
         self.store = s
+        self.bindings.setup(store: s)
     }
 }
 
@@ -41,7 +44,7 @@ public extension AurumController{
 }
 
 
-infix operator ~>
+infix operator ~>: AdditionPrecedence
 
 public func ~><T: AurumController>(left: (T, UIButton), right: T.Action){
     left.1.reactive.tap.replaceElements(with: right).bind(to: left.0.reduce)
