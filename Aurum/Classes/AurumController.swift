@@ -28,6 +28,8 @@ public extension AurumController{
         self.store = s
         self.bindings.setup(store: s)
     }
+    
+    var bindings: Bindings<State, Action> { return Bindings<State, Action>() }
 }
 
 public extension AurumController{
@@ -44,7 +46,7 @@ public extension AurumController{
 }
 
 
-infix operator ~>: AdditionPrecedence
+infix operator ~>
 
 public func ~><T: AurumController>(left: (T, UIButton), right: T.Action){
     left.1.reactive.tap.replaceElements(with: right).bind(to: left.0.reduce)

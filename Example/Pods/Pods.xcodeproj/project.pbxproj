@@ -243,8 +243,12 @@
 		1E16ADA023D8AE3B00CBB142 /* AurumStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AurumStore.swift; path = Aurum/Classes/AurumStore.swift; sourceTree = "<group>"; };
 		1E16ADA123D8AE3B00CBB142 /* AurumMiddleware.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AurumMiddleware.swift; path = Aurum/Classes/AurumMiddleware.swift; sourceTree = "<group>"; };
 		1E78E5FC92106B08D34468CF40BCF254 /* ReactiveKit.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = ReactiveKit.modulemap; sourceTree = "<group>"; };
-		1E7C3FD623E86A9E009F2F4A /* AurumBinder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AurumBinder.swift; path = Aurum/Classes/AurumBinder.swift; sourceTree = "<group>"; };
+		1E7C3FD623E86A9E009F2F4A /* AurumBinding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AurumBinding.swift; path = Aurum/Classes/AurumBinding.swift; sourceTree = "<group>"; };
 		1E7C3FD823E86C09009F2F4A /* ButtonComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonComponent.swift; sourceTree = "<group>"; };
+		1E8AE07223E9BA310090FA63 /* AurumComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AurumComponent.swift; sourceTree = "<group>"; };
+		1E8AE07623E9C7960090FA63 /* LabelComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelComponent.swift; sourceTree = "<group>"; };
+		1E8AE07B23E9CD2E0090FA63 /* AurumAnimation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AurumAnimation.swift; path = Aurum/Classes/AurumAnimation.swift; sourceTree = "<group>"; };
+		1E8AE07C23E9CE460090FA63 /* ImageComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageComponent.swift; sourceTree = "<group>"; };
 		20FA217225B82E451C8FC48B5BF67BC9 /* Subscribers.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Subscribers.swift; path = Sources/Subscribers.swift; sourceTree = "<group>"; };
 		212B5192B8D9D652CD1FE4303F9072E1 /* SignalProtocol+Optional.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "SignalProtocol+Optional.swift"; path = "Sources/SignalProtocol+Optional.swift"; sourceTree = "<group>"; };
 		21ED909E65616DF14E0CAE8499B340D3 /* OrderedCollectionDiff+Strideable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "OrderedCollectionDiff+Strideable.swift"; path = "Sources/Bond/Observable Collections/OrderedCollectionDiff+Strideable.swift"; sourceTree = "<group>"; };
@@ -447,13 +451,16 @@
 			name = iOS;
 			sourceTree = "<group>";
 		};
-		1E7C3FD723E86BFB009F2F4A /* UIComponents */ = {
+		1E7C3FD723E86BFB009F2F4A /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				1E8AE07223E9BA310090FA63 /* AurumComponent.swift */,
 				1E7C3FD823E86C09009F2F4A /* ButtonComponent.swift */,
+				1E8AE07623E9C7960090FA63 /* LabelComponent.swift */,
+				1E8AE07C23E9CE460090FA63 /* ImageComponent.swift */,
 			);
-			name = UIComponents;
-			path = Aurum/Classes/UIComponents;
+			name = Components;
+			path = Aurum/Classes/Components;
 			sourceTree = "<group>";
 		};
 		4D83B846F1169B3E24E6A03DA2DD26C2 /* Support Files */ = {
@@ -514,8 +521,9 @@
 				1E16AD9A23D8AE3B00CBB142 /* AurumReducer.swift */,
 				1E16AD9B23D8AE3B00CBB142 /* AurumSimulation.swift */,
 				1E16ADA023D8AE3B00CBB142 /* AurumStore.swift */,
-				1E7C3FD623E86A9E009F2F4A /* AurumBinder.swift */,
-				1E7C3FD723E86BFB009F2F4A /* UIComponents */,
+				1E7C3FD623E86A9E009F2F4A /* AurumBinding.swift */,
+				1E8AE07B23E9CD2E0090FA63 /* AurumAnimation.swift */,
+				1E7C3FD723E86BFB009F2F4A /* Components */,
 				E26CE0FADA9842D9D07C7EA558528D6A /* Pod */,
 				C2D4208909963C215F9944A72A04F51E /* Support Files */,
 			);
