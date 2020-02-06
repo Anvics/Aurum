@@ -12,6 +12,7 @@ import ReactiveKit
 
 public protocol AurumStoreSetupable {
     func set<S, A>(store: AurumStore<S, A>)
+    func setupBindings()
 }
 
 public protocol AurumController: class, AurumStoreSetupable {
@@ -19,17 +20,20 @@ public protocol AurumController: class, AurumStoreSetupable {
     associatedtype Action: AurumAction
     
     var store: AurumStore<State, Action>! { get set }
-    var bindings: Bindings<State, Action> { get }
+    var bindings: AurumBindings<State, Action> { get }
 }
 
 public extension AurumController{
+    var bindings: AurumBindings<State, Action> { return AurumBindings<State, Action>() }
+    
     func set<S, A>(store: AurumStore<S, A>){
         guard let s = store as? AurumStore<State, Action> else { fatalError("\(type(of: self)) failed to set store: expected <\(State.self), \(Action.self)> got <\(S.self), \(A.self)>") }
         self.store = s
-        self.bindings.setup(store: s)
     }
     
-    var bindings: Bindings<State, Action> { return Bindings<State, Action>() }
+    func setupBindings(){
+        bindings.setup(store: store)
+    }
 }
 
 public extension AurumController{
@@ -44,14 +48,6 @@ public extension AurumController{
         store.reduce(action: action)
     }
 }
-
-
-infix operator ~>
-
-public func ~><T: AurumController>(left: (T, UIButton), right: T.Action){
-    left.1.reactive.tap.replaceElements(with: right).bind(to: left.0.reduce)
-}
-
 
 private var UIView_Associated_Embeded: UInt8 = 0
 extension UIView{
@@ -74,6 +70,16 @@ extension UIViewController{
     public func push(_ viewController: UIViewController, animated: Bool){
         navigationController?.pushViewController(viewController, animated: animated)
     }
+    
+    public func embed(in view: UIView, container: UIViewController, clean: Bool = false){
+        if clean { view.unembedAll() }
+        self.view.frame = view.bounds
+        container.addChild(self)
+        view.addSubview(self.view)
+        view.embedded.append(self)
+        didMove(toParent: container)
+    }
+
 
     public func embedIn(view: UIView, container: UIViewController){
         self.view.frame = view.bounds

@@ -15,21 +15,27 @@ public class ButtonData: AurumComponentData, AurumDataCreatable {
     let image: UIImage?
     let backgroundImage: UIImage?
     let backgroundColor: UIColor?
-    
-    required public init(data: String){
+    let isEnabled: Bool?
+    let isHidden: Bool?
+
+    required public init(data: String?){
         self.title = data
         self.titleColor = nil
         self.image = nil
         self.backgroundImage = nil
         self.backgroundColor = nil
+        self.isEnabled = nil
+        self.isHidden = nil
     }
-    
-    public init(title: String? = nil, titleColor: UIColor? = nil, image: UIImage? = nil, backgroundImage: UIImage? = nil, backgroundColor: UIColor? = nil) {
+
+    public init(title: String? = nil, titleColor: UIColor? = nil, image: UIImage? = nil, backgroundImage: UIImage? = nil, backgroundColor: UIColor? = nil, isEnabled: Bool? = nil, isHidden: Bool? = nil) {
         self.title = title
         self.titleColor = titleColor
         self.image = image
         self.backgroundImage = backgroundImage
         self.backgroundColor = backgroundColor
+        self.isEnabled = isEnabled
+        self.isHidden = isHidden
     }
     
     public func update(component: UIButton){
@@ -37,8 +43,9 @@ public class ButtonData: AurumComponentData, AurumDataCreatable {
         resolve(title) { c.setTitle($0, for: .normal) }
         resolve(titleColor) { c.setTitleColor($0, for: .normal) }
         resolve(image) { c.setImage($0, for: .normal) }
-        resolve(backgroundImage) { c.setBackgroundImage($0, for: .normal) }
+        resolve(backgroundImage) { c.setBackgroundImage($0, for: .normal) }        
         resolve(backgroundColor) { c.backgroundColor = $0 }
+        resolve(isHidden) { c.isHidden = $0 }
     }
 }
 
@@ -47,7 +54,8 @@ public func ==(left: ButtonData, right: ButtonData) -> Bool{
         left.titleColor == right.titleColor &&
         left.image == right.image &&
         left.backgroundImage == right.backgroundImage &&
-        left.backgroundColor == right.backgroundColor
+        left.backgroundColor == right.backgroundColor &&
+        left.isHidden == right.isHidden
 }
 
 extension UIButton: AurumComponent{
