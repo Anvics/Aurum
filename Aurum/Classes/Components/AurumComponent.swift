@@ -15,7 +15,7 @@ public protocol AurumComponentData: Equatable {
     func update(component: Component)
 }
 
-func resolve<T>(_ value: T?, resolver: (T) -> Void){
+public func resolve<T>(_ value: T?, resolver: (T) -> Void){
     if let v = value { resolver(v) }
 }
 
@@ -30,8 +30,8 @@ public protocol AurumBaseComponent: NSObjectProtocol {
 
 public protocol AurumComponent: AurumBaseComponent {
     associatedtype Data: AurumComponentData where Data.Component == Self
-    associatedtype ProducedData
-    var event: SafeSignal<ProducedData> { get }
+    associatedtype Signal: SignalProtocol where Signal.Error == Never
+    var event: Signal { get }
 }
 
 struct AurumComponentKeys {

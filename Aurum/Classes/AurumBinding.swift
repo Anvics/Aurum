@@ -42,7 +42,7 @@ public class AurumBaseComponentBinding<S: AurumState, C: AurumBaseComponent, A: 
 
 public class AurumComponentBinding<S: AurumState, C: AurumComponent, A: AurumAction>: AurumBinding<S, A>{
     typealias Extractor = (S) -> C.Data?
-    typealias ActionProvider = (C.ProducedData) -> A?
+    typealias ActionProvider = (C.Signal.Element) -> A?
 
     let extractor: Extractor?
     let component: C
@@ -149,7 +149,7 @@ public func ~><S: AurumState, C: AurumComponent, A: AurumAction>(left: KeyPath<S
 }
 
 //Create binding Component -> Action
-public func ~><S: AurumState, C: AurumComponent, A: AurumAction>(left: C, right: @escaping (C.ProducedData) -> A?) -> AurumBinding<S, A>{
+public func ~><S: AurumState, C: AurumComponent, A: AurumAction>(left: C, right: @escaping (C.Signal.Element) -> A?) -> AurumBinding<S, A>{
     return AurumComponentBinding(component: left, action: right)
 }
 
@@ -158,7 +158,7 @@ public func ~><S: AurumState, C: AurumComponent, A: AurumAction>(left: C, right:
 }
 
 //Create full binding (Data -> Component) -> Action
-public func ~><S: AurumState, C: AurumComponent, A: AurumAction>(left: AurumComponentBinding<S, C, A>, right: @escaping (C.ProducedData) -> A?) -> AurumBinding<S, A>{
+public func ~><S: AurumState, C: AurumComponent, A: AurumAction>(left: AurumComponentBinding<S, C, A>, right: @escaping (C.Signal.Element) -> A?) -> AurumBinding<S, A>{
     left.action = right
     return left
 }
