@@ -12,7 +12,7 @@ import ReactiveKit
 
 public class AurumStore<State: AurumState, Action: AurumAction>{
     public let state: Property<State>
-    public let reducer = SafeReplayOneSubject<Action, Never>()
+    public let reducer = SafeReplayOneSubject<Action>()
 
     private let reduceAction: (Action) -> Void
     
