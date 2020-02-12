@@ -456,10 +456,10 @@
 			isa = PBXGroup;
 			children = (
 				1EBE92CF23EC73DE00B41AB8 /* AurumComponent.swift */,
+				1EBE92D223EC73DE00B41AB8 /* ViewComponent.swift */,
 				1EBE92D023EC73DE00B41AB8 /* ButtonComponent.swift */,
 				1EBE92D123EC73DE00B41AB8 /* ImageComponent.swift */,
 				1EBE92D323EC73DE00B41AB8 /* LabelComponent.swift */,
-				1EBE92D223EC73DE00B41AB8 /* ViewComponent.swift */,
 			);
 			name = Components;
 			path = Aurum/Classes/Components;

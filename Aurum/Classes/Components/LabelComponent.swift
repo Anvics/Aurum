@@ -14,6 +14,7 @@ public class LabelData: AurumComponentData, AurumDataCreatable{
     let textColor: UIColor?
     let font: UIFont?
     let backgroundColor: UIColor?
+    let alpha: CGFloat?
     let isHidden: Bool?
     
     required public init(data: String?){
@@ -21,14 +22,16 @@ public class LabelData: AurumComponentData, AurumDataCreatable{
         self.textColor = nil
         self.font = nil
         self.backgroundColor = nil
+        self.alpha = nil
         self.isHidden = nil
     }
  
-    public init(text: String? = nil, textColor: UIColor? = nil, font: UIFont? = nil, backgroundColor: UIColor? = nil, isHidden: Bool? = nil) {
+    public init(text: String? = nil, textColor: UIColor? = nil, font: UIFont? = nil, backgroundColor: UIColor? = nil, alpha: CGFloat? = nil, isHidden: Bool? = nil) {
         self.text = text
         self.textColor = textColor
         self.font = font
         self.backgroundColor = backgroundColor
+        self.alpha = alpha
         self.isHidden = isHidden
     }
     
@@ -38,6 +41,7 @@ public class LabelData: AurumComponentData, AurumDataCreatable{
         resolve(textColor) { c.textColor = $0 }
         resolve(font) { c.font = $0 }
         resolve(backgroundColor) { c.backgroundColor = $0 }
+        resolve(alpha) { c.alpha = $0 }
         resolve(isHidden) { c.isHidden = $0 }
     }
 }

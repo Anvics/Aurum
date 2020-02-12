@@ -12,17 +12,20 @@ import Bond
 public class ImageData: AurumComponentData, AurumDataCreatable{
     let image: UIImage?
     let backgroundColor: UIColor?
+    let alpha: CGFloat?
     let isHidden: Bool?
     
     required public init(data: UIImage?){
         self.image = data
         self.backgroundColor = nil
+        self.alpha = nil
         self.isHidden = nil
     }
     
-    public init(image: UIImage? = nil, backgroundColor: UIColor? = nil, isHidden: Bool? = nil) {
+    public init(image: UIImage? = nil, backgroundColor: UIColor? = nil, alpha: CGFloat? = nil, isHidden: Bool? = nil) {
         self.image = image
         self.backgroundColor = backgroundColor
+        self.alpha = alpha
         self.isHidden = isHidden
     }
     
@@ -30,6 +33,7 @@ public class ImageData: AurumComponentData, AurumDataCreatable{
         let c = component
         resolve(image) { c.image = $0 }
         resolve(backgroundColor) { c.backgroundColor = $0 }
+        resolve(alpha) { c.alpha = $0 }
         resolve(isHidden) { c.isHidden = $0 }
     }
 }
