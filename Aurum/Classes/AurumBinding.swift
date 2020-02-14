@@ -120,50 +120,50 @@ public func +<S, A>(left: AurumBindings<S, A>, right: AurumBindings<S, A>) -> Au
     return AurumBindings(left.bindings + right.bindings)
 }
 
-infix operator ~>: BitwiseShiftPrecedence
+infix operator *>: BitwiseShiftPrecedence
 
 //Create binding Data -> BaseComponent
-public func ~><S: AurumState, C: AurumBaseComponent, A: AurumAction>(left: @escaping (S) -> C.BaseData?, right: C) -> AurumBaseComponentBinding<S, C, A>{
+public func *><S: AurumState, C: AurumBaseComponent, A: AurumAction>(left: @escaping (S) -> C.BaseData?, right: C) -> AurumBaseComponentBinding<S, C, A>{
     return AurumBaseComponentBinding(extractor: left, component: right)
 }
 
-public func ~><S: AurumState, C: AurumBaseComponent, A: AurumAction>(left: @escaping (S) -> C.BaseData.Data?, right: C) -> AurumBaseComponentBinding<S, C, A> where C.BaseData: AurumDataCreatable{
+public func *><S: AurumState, C: AurumBaseComponent, A: AurumAction>(left: @escaping (S) -> C.BaseData.Data?, right: C) -> AurumBaseComponentBinding<S, C, A> where C.BaseData: AurumDataCreatable{
     return AurumBaseComponentBinding(extractor: { C.BaseData(data: left($0)) }, component: right)
 }
 
-public func ~><S: AurumState, C: AurumBaseComponent, A: AurumAction>(left: KeyPath<S, C.BaseData>, right: C) -> AurumBaseComponentBinding<S, C, A>{
+public func *><S: AurumState, C: AurumBaseComponent, A: AurumAction>(left: KeyPath<S, C.BaseData>, right: C) -> AurumBaseComponentBinding<S, C, A>{
     return AurumBaseComponentBinding(extractor: { $0[keyPath: left] }, component: right)
 }
 
 //Create binding Data -> Component
-public func ~><S: AurumState, C: AurumComponent, A: AurumAction>(left: @escaping (S) -> C.Data?, right: C) -> AurumComponentBinding<S, C, A>{
+public func *><S: AurumState, C: AurumComponent, A: AurumAction>(left: @escaping (S) -> C.Data?, right: C) -> AurumComponentBinding<S, C, A>{
     return AurumComponentBinding(extractor: left, component: right)
 }
 
-public func ~><S: AurumState, C: AurumComponent, A: AurumAction>(left: @escaping (S) -> C.Data.Data?, right: C) -> AurumComponentBinding<S, C, A> where C.Data: AurumDataCreatable{
+public func *><S: AurumState, C: AurumComponent, A: AurumAction>(left: @escaping (S) -> C.Data.Data?, right: C) -> AurumComponentBinding<S, C, A> where C.Data: AurumDataCreatable{
     return AurumComponentBinding(extractor: { C.Data(data: left($0)) }, component: right)
 }
 
-public func ~><S: AurumState, C: AurumComponent, A: AurumAction>(left: KeyPath<S, C.Data>, right: C) -> AurumComponentBinding<S, C, A>{
+public func *><S: AurumState, C: AurumComponent, A: AurumAction>(left: KeyPath<S, C.Data>, right: C) -> AurumComponentBinding<S, C, A>{
     return AurumComponentBinding(extractor: { $0[keyPath: left] }, component: right)
 }
 
 //Create binding Component -> Action
-public func ~><S: AurumState, C: AurumComponent, A: AurumAction>(left: C, right: @escaping (C.Signal.Element) -> A?) -> AurumBinding<S, A>{
+public func *><S: AurumState, C: AurumComponent, A: AurumAction>(left: C, right: @escaping (C.Signal.Element) -> A?) -> AurumBinding<S, A>{
     return AurumComponentBinding(component: left, action: right)
 }
 
-public func ~><S: AurumState, C: AurumComponent, A: AurumAction>(left: C, right: A) -> AurumBinding<S, A>{
+public func *><S: AurumState, C: AurumComponent, A: AurumAction>(left: C, right: A) -> AurumBinding<S, A>{
     return AurumComponentBinding(component: left, action: { _ in right })
 }
 
 //Create full binding (Data -> Component) -> Action
-public func ~><S: AurumState, C: AurumComponent, A: AurumAction>(left: AurumComponentBinding<S, C, A>, right: @escaping (C.Signal.Element) -> A?) -> AurumBinding<S, A>{
+public func *><S: AurumState, C: AurumComponent, A: AurumAction>(left: AurumComponentBinding<S, C, A>, right: @escaping (C.Signal.Element) -> A?) -> AurumBinding<S, A>{
     left.action = right
     return left
 }
 
-public func ~><S: AurumState, C: AurumComponent, A: AurumAction>(left: AurumComponentBinding<S, C, A>, right: A) -> AurumBinding<S, A>{
+public func *><S: AurumState, C: AurumComponent, A: AurumAction>(left: AurumComponentBinding<S, C, A>, right: A) -> AurumBinding<S, A>{
     left.action = { _ in right }
     return left
 }

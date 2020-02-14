@@ -94,13 +94,13 @@ public class AurumListBinding<S: AurumState, LC: AurumListConnector, A: AurumAct
 }
 
 //Create binding Data -> (Collection, Connector)
-public func ~><S: AurumState, LC: AurumListConnector, A: AurumAction>(left: @escaping (S) -> [LC.DataType], right: (UICollectionView, LC)) -> AurumListBinding<S, LC, A>{
+public func *><S: AurumState, LC: AurumListConnector, A: AurumAction>(left: @escaping (S) -> [LC.DataType], right: (UICollectionView, LC)) -> AurumListBinding<S, LC, A>{
     right.0.connector = right.1
     right.1.collectionView = right.0
     return AurumListBinding(extractor: left, component: right.0, connector: right.1)
 }
 
-public func ~><S: AurumState, D: Equatable, C: UICollectionViewCell, A: AurumAction>(left: @escaping (S) -> [D], right: (UICollectionView, ((C, D, [D], IndexPath) -> Void))) -> AurumListBinding<S, AurumListBaseConnector<D, C>, A>{
+public func *><S: AurumState, D: Equatable, C: UICollectionViewCell, A: AurumAction>(left: @escaping (S) -> [D], right: (UICollectionView, ((C, D, [D], IndexPath) -> Void))) -> AurumListBinding<S, AurumListBaseConnector<D, C>, A>{
     let connector = AurumListBaseConnector(setuper: right.1)
     right.0.connector = connector
     connector.collectionView = right.0
@@ -108,7 +108,7 @@ public func ~><S: AurumState, D: Equatable, C: UICollectionViewCell, A: AurumAct
 }
 
 //Create full binding (Data -> (Collection, Connector)) -> Action
-public func ~><S: AurumState, LC: AurumListConnector, A: AurumAction>(left: AurumListBinding<S, LC, A>, right: @escaping (IndexPath) -> A?) -> AurumBinding<S, A>{
+public func *><S: AurumState, LC: AurumListConnector, A: AurumAction>(left: AurumListBinding<S, LC, A>, right: @escaping (IndexPath) -> A?) -> AurumBinding<S, A>{
     left.action = right
     return left
 }
