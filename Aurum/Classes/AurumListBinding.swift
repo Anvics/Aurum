@@ -39,7 +39,9 @@ public class AurumListBaseConnector<D: Equatable, C: UICollectionViewCell>: NSOb
     }
     
     public func cell(collection: UICollectionView, at: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "\(type(of: CellType.self))", for: at) as! CellType
+        let cellType = "\(type(of: CellType.self))"
+        let id = String(cellType.prefix(upTo: cellType.firstIndex(of: ".")!))
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: id, for: at) as! CellType
         let model = items[at.item]
         setup(cell: cell, data: model, array: items, indexPath: at)
         return cell
@@ -83,8 +85,11 @@ public class AurumListBinding<S: AurumState, LC: AurumListConnector, A: AurumAct
     }
 
     public override func setup(state: Property<S>, reduce: Subject<A, Never>) {
+        component.delegate = connector
+        component.dataSource = connector
+
         _ = state.map(extractor).removeDuplicates().observeNext(with: connector.update)
-        
+
         if let action = action{
             connector.set { ip in
                 if let a = action(ip){ reduce.next(a) }

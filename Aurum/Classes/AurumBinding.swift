@@ -120,7 +120,7 @@ public func +<S, A>(left: AurumBindings<S, A>, right: AurumBindings<S, A>) -> Au
     return AurumBindings(left.bindings + right.bindings)
 }
 
-infix operator *>: BitwiseShiftPrecedence
+infix operator *>: MultiplicationPrecedence
 
 //Create binding Data -> BaseComponent
 public func *><S: AurumState, C: AurumBaseComponent, A: AurumAction>(left: @escaping (S) -> C.BaseData?, right: C) -> AurumBaseComponentBinding<S, C, A>{
