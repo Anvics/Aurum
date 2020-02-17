@@ -30,11 +30,13 @@ public protocol AurumListConnector: UICollectionViewDelegateFlowLayout, UICollec
 public class AurumListBaseConnector<D: Equatable, C: UICollectionViewCell>: NSObject, AurumListConnector{
     typealias Setuper = (C, D, [D], IndexPath) -> Void
 
-    let setuper: Setuper
+    let setuper: Setuper    
+    let size: CGSize
     
     var items: [D] = []
 
-    init(setuper: @escaping Setuper) {
+    init(size: CGSize, setuper: @escaping Setuper) {
+        self.size = size
         self.setuper = setuper
     }
     
@@ -66,6 +68,10 @@ public class AurumListBaseConnector<D: Equatable, C: UICollectionViewCell>: NSOb
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         return cell(collection: collectionView, at: indexPath)
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize{
+        return size
     }
 }
 
@@ -105,8 +111,8 @@ public func *><S: AurumState, LC: AurumListConnector, A: AurumAction>(left: @esc
     return AurumListBinding(extractor: left, component: right.0, connector: right.1)
 }
 
-public func *><S: AurumState, D: Equatable, C: UICollectionViewCell, A: AurumAction>(left: @escaping (S) -> [D], right: (UICollectionView, ((C, D, [D], IndexPath) -> Void))) -> AurumListBinding<S, AurumListBaseConnector<D, C>, A>{
-    let connector = AurumListBaseConnector(setuper: right.1)
+public func *><S: AurumState, D: Equatable, C: UICollectionViewCell, A: AurumAction>(left: @escaping (S) -> [D], right: (UICollectionView, CGSize, ((C, D, [D], IndexPath) -> Void))) -> AurumListBinding<S, AurumListBaseConnector<D, C>, A>{
+    let connector = AurumListBaseConnector(size: right.1, setuper: right.2)
     right.0.connector = connector
     connector.collectionView = right.0
     return AurumListBinding(extractor: left, component: right.0, connector: connector)
