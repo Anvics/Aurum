@@ -104,6 +104,18 @@ public class AurumListBinding<S: AurumState, LC: AurumListConnector, A: AurumAct
     }
 }
 
+public class AurumListProvider<D: Equatable, C: UICollectionViewCell>{
+    let list: UICollectionView
+    let size: CGSize
+    let setup: (C, D, [D], IndexPath) -> Void
+    
+    public init(list: UICollectionView, size: CGSize, setup: @escaping (C, D, [D], IndexPath) -> Void) {
+        self.list = list
+        self.size = size
+        self.setup = setup
+    }
+}
+
 //Create binding Data -> (Collection, Connector)
 public func *><S: AurumState, LC: AurumListConnector, A: AurumAction>(left: @escaping (S) -> [LC.DataType], right: (UICollectionView, LC)) -> AurumListBinding<S, LC, A>{
     right.0.connector = right.1
@@ -111,12 +123,13 @@ public func *><S: AurumState, LC: AurumListConnector, A: AurumAction>(left: @esc
     return AurumListBinding(extractor: left, component: right.0, connector: right.1)
 }
 
-public func *><S: AurumState, D: Equatable, C: UICollectionViewCell, A: AurumAction>(left: @escaping (S) -> [D], right: (UICollectionView, CGSize, ((C, D, [D], IndexPath) -> Void))) -> AurumListBinding<S, AurumListBaseConnector<D, C>, A>{
-    let connector = AurumListBaseConnector(size: right.1, setuper: right.2)
-    right.0.connector = connector
-    connector.collectionView = right.0
-    return AurumListBinding(extractor: left, component: right.0, connector: connector)
+public func *><S: AurumState, D: Equatable, C: UICollectionViewCell, A: AurumAction>(left: @escaping (S) -> [D], right: AurumListProvider<D, C>) -> AurumListBinding<S, AurumListBaseConnector<D, C>, A>{
+    let connector = AurumListBaseConnector(setuper: right.setup)
+    right.list.connector = connector
+    connector.collectionView = right.list
+    return AurumListBinding(extractor: left, component: right.list, connector: connector)
 }
+
 
 //Create full binding (Data -> (Collection, Connector)) -> Action
 public func *><S: AurumState, LC: AurumListConnector, A: AurumAction>(left: AurumListBinding<S, LC, A>, right: @escaping (IndexPath) -> A?) -> AurumBinding<S, A>{
