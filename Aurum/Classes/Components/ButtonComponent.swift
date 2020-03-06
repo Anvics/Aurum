@@ -48,7 +48,10 @@ public class ButtonData: AurumComponentData, AurumDataCreatable {
         resolve(image) { c.setImage($0, for: .normal) }
         resolve(backgroundImage) { c.setBackgroundImage($0, for: .normal) }        
         resolve(backgroundColor) { c.backgroundColor = $0 }
-        resolve(isEnabled) { c.isEnabled = $0 }
+        resolve(isEnabled) {
+            c.isEnabled = $0
+            if self.alpha == nil { c.alpha = $0 ? 1 : 0.5 }
+        }
         resolve(alpha) { c.alpha = $0 }
         resolve(isHidden) { c.isHidden = $0 }
     }
