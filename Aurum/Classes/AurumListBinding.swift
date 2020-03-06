@@ -9,47 +9,51 @@ import UIKit
 import ReactiveKit
 import Bond
 
-public protocol AurumListConnector: class{
+public protocol AurumListConnectorType: class{
     associatedtype Data: Equatable
     associatedtype Action: AurumAction
     typealias Reducer = Subject<Action, Never>
-    typealias ActionListener = (Int) -> Void
+    typealias CellPressedListener = (Int) -> Void
     
     var reducer: Reducer? { get set }
-    var actionListener: ActionListener? { get set }
-    var reloadList: (() -> Void)? { get set }
+    var cellPressed: CellPressedListener? { get set }
     
     func update(with: [Data])
 }
 
-public protocol AurumCollectionConnector: AurumListConnector, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource{ }
+public protocol AurumSectionListConnectorType: AurumListConnectorType{
+    associatedtype Item
+    var itemsExtractor: ((Data) -> [Item])? { get set }
+    var sectionPressed: CellPressedListener? { get set }
+}
 
-public protocol AurumTableConnector: AurumListConnector, UITableViewDelegate, UITableViewDataSource{ }
-
-public class AurumCollectionBaseConnector<Model: Equatable, Cell: UICollectionViewCell, Action: AurumAction>: NSObject, AurumCollectionConnector{
-    typealias Setuper = (Cell, Model, [Model], Int, Reducer) -> Void
-
+public class AurumCollectionConnector<Model: Equatable, Cell: UICollectionViewCell, Action: AurumAction>: NSObject, AurumListConnectorType, UICollectionViewDelegateFlowLayout{
+    public typealias Setuper = (Cell, Model, [Model], Int, Reducer) -> Void
+    
     let setuper: Setuper
     let size: CGSize
     
     var items: [Model] = []
     
     public var reducer: Subject<Action, Never>?
-    public var reloadList: (() -> Void)?
-    public var actionListener: ActionListener?
+    public let reloadList: (() -> Void)
+    public var cellPressed: CellPressedListener?
 
-    init(size: CGSize, setuper: @escaping Setuper) {
+    public init(_ collection: UICollectionView, size: CGSize, setuper: @escaping Setuper) {
+        reloadList = { [weak collection] in collection?.reloadData() }
         self.size = size
         self.setuper = setuper
+        super.init()
+        collection.connector = self
     }
     
     public func update(with: [Model]){
         items = with
-        reloadList?()
+        reloadList()
     }
     
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        actionListener?(indexPath.item)
+        cellPressed?(indexPath.item)
     }
     
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -71,24 +75,27 @@ public class AurumCollectionBaseConnector<Model: Equatable, Cell: UICollectionVi
     }
 }
 
-public class AurumTableBaseConnector<Model: Equatable, Cell: UITableViewCell, Action: AurumAction>: NSObject, AurumTableConnector{
-    typealias Setuper = (Cell, Model, [Model], Int, Reducer) -> Void
+public class AurumTableConnector<Model: Equatable, Cell: UITableViewCell, Action: AurumAction>: NSObject, AurumListConnectorType, UITableViewDelegate, UITableViewDataSource{
+    public typealias Setuper = (Cell, Model, [Model], Int, Reducer) -> Void
 
     let setuper: Setuper
     
     var items: [Model] = []
     
     public var reducer: Subject<Action, Never>?
-    public var reloadList: (() -> Void)?
-    public var actionListener: ActionListener?
+    public let reloadList: (() -> Void)
+    public var cellPressed: CellPressedListener?
 
-    init(setuper: @escaping Setuper) {
+    public init(_ table: UITableView, setuper: @escaping Setuper) {
+        reloadList = { [weak table] in table?.reloadData() }
         self.setuper = setuper
+        super.init()
+        table.connector = self
     }
     
     public func update(with: [Model]){
         items = with
-        reloadList?()
+        reloadList()
     }
     
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -106,17 +113,94 @@ public class AurumTableBaseConnector<Model: Equatable, Cell: UITableViewCell, Ac
     }
     
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        actionListener?(indexPath.row)
+        cellPressed?(indexPath.row)
     }
 }
 
-public class AurumListBinding<S: AurumState, LC: AurumListConnector>: AurumBinding<S, LC.Action>{
+public class AurumSectionTableConnector<Section: Equatable, Item: Equatable, SectionCell: UITableViewCell, Cell: UITableViewCell, Action: AurumAction>: NSObject, AurumSectionListConnectorType, UITableViewDelegate, UITableViewDataSource{
+    
+    var sections: [Section] = []
+    let reloadList: (() -> Void)
+
+    public var itemsExtractor: ((Section) -> [Item])?
+    public var reducer: Subject<Action, Never>?
+    public var sectionPressed: CellPressedListener?
+    public var cellPressed: CellPressedListener?
+
+    public typealias SectionCellSetuper = (SectionCell, Section, [Section], Int, Reducer) -> Void
+    public typealias CellSetuper = (Cell, Item, [Item], IndexPath, Reducer) -> Void
+
+    let sectionSetuper: SectionCellSetuper
+    let setuper: CellSetuper
+    let shouldAddSectionTapListener: Bool
+    
+    public init(_ table: UITableView, shouldAddSectionTapListener: Bool = true, sectionSetuper: @escaping SectionCellSetuper, setuper: @escaping CellSetuper) {
+        reloadList = { [weak table] in table?.reloadData() }
+        self.shouldAddSectionTapListener = shouldAddSectionTapListener
+        self.sectionSetuper = sectionSetuper
+        self.setuper = setuper
+        super.init()
+        table.connector = self
+    }
+
+    public func update(with: [Section]) {
+        sections = with
+        reloadList()
+    }
+    
+    public func numberOfSections(in tableView: UITableView) -> Int {
+        return sections.count
+    }
+    
+    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return itemsExtractor?(sections[section]).count ?? 0
+    }
+    
+    public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let name = "\(type(of: SectionCell.self))"
+        let id = String(name.prefix(upTo: name.firstIndex(of: ".")!))
+        let cell = tableView.dequeueReusableCell(withIdentifier: id) as! SectionCell
+        cell.reactive.bag.dispose()
+        if shouldAddSectionTapListener{
+            let button = UIButton(type: .custom)
+            button.frame = cell.bounds
+            button.reactive.tap.observeNext { [weak self] in
+                self?.sectionPressed?(section)
+            }.dispose(in: cell.reactive.bag)
+            cell.addSubview(button)
+        }
+        let model = sections[section]
+        if let reducer = reducer { sectionSetuper(cell, model, sections, section, reducer) }
+        return cell
+    }
+    
+    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let name = "\(type(of: Cell.self))"
+        let id = String(name.prefix(upTo: name.firstIndex(of: ".")!))
+        let cell = tableView.dequeueReusableCell(withIdentifier: id, for: indexPath) as! Cell
+        cell.reactive.bag.dispose()
+        if let itemsExtractor = itemsExtractor,
+            let reducer = reducer{
+            let section = sections[indexPath.section]
+            let items = itemsExtractor(section)
+            let item = items[indexPath.row]
+            setuper(cell, item, items, indexPath, reducer)
+        }
+        return cell
+    }
+    
+    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        cellPressed?(indexPath.row)
+    }
+}
+
+public class AurumListBinding<S: AurumState, LC: AurumListConnectorType>: AurumBinding<S, LC.Action>{
     typealias Extractor = (S) -> [LC.Data]
     typealias ActionProvider = (Int) -> LC.Action?
 
     let extractor: Extractor
     let connector: LC
-    var action: ActionProvider?
+    var cellAction: ActionProvider?
 
     init(extractor: @escaping Extractor, connector: LC) {
         self.extractor = extractor
@@ -127,74 +211,52 @@ public class AurumListBinding<S: AurumState, LC: AurumListConnector>: AurumBindi
         connector.reducer = reduce
         _ = state.map(extractor).removeDuplicates().observeNext(with: connector.update)
 
-        if let action = action{
-            connector.actionListener = { i in
+        if let action = cellAction{
+            connector.cellPressed = { i in
                 if let a = action(i){ reduce.next(a) }
             }
         }
     }
 }
 
-public class AurumCollectionProvider<Data: Equatable, Cell: UICollectionViewCell, A: AurumAction>{
-    public typealias Reducer = Subject<A, Never>
-    public typealias Setuper = (Cell, Data, [Data], Int, Reducer) -> Void
+public class AurumSectionListBinding<S: AurumState, LC: AurumSectionListConnectorType>: AurumListBinding<S, LC>{
+    typealias ItemExtractor = (LC.Data) -> [LC.Item]
 
-    let collection: UICollectionView
-    let size: CGSize
-    let setup: Setuper
+    var sectionAction: ActionProvider?
+
+    init(sectionExtractor: @escaping Extractor, itemExtractor: @escaping ItemExtractor, connector: LC) {
+        connector.itemsExtractor = itemExtractor
+        super.init(extractor: sectionExtractor, connector: connector)
+    }
     
-    public init(_ collection: UICollectionView, size: CGSize, setup: @escaping Setuper) {
-        self.collection = collection
-        self.size = size
-        self.setup = setup
+    public override func setup(state: Property<S>, reduce: Subject<LC.Action, Never>) {
+        super.setup(state: state, reduce: reduce)
+        if let action = sectionAction{
+            connector.sectionPressed = { i in
+                if let a = action(i){ reduce.next(a) }
+            }
+        }
     }
 }
 
-public class AurumTableProvider<Data: Equatable, Cell: UITableViewCell, A: AurumAction>{
-    public typealias Reducer = Subject<A, Never>
-    public typealias Setuper = (Cell, Data, [Data], Int, Reducer) -> Void
-
-    let table: UITableView
-    let setup: Setuper
-    
-    public init(_ table: UITableView, setup: @escaping Setuper) {
-        self.table = table
-        self.setup = setup
-    }
+//Create binding: Data -> Connector
+public func *><S: AurumState, LC: AurumListConnectorType>(left: @escaping (S) -> [LC.Data], right: LC) -> AurumListBinding<S, LC>{
+    return AurumListBinding(extractor: left, connector: right)
 }
 
-//Create binding: Data -> (Collection, Connector)
-//Collection
-public func *><S: AurumState, LC: AurumCollectionConnector>(left: @escaping (S) -> [LC.Data], right: (UICollectionView, LC)) -> AurumListBinding<S, LC>{
-    right.0.connector = right.1
-    right.1.reloadList = right.0.reloadData
-    return AurumListBinding(extractor: left, connector: right.1)
-}
-
-public func *><S: AurumState, D: Equatable, C: UICollectionViewCell, A: AurumAction>(left: @escaping (S) -> [D], right: AurumCollectionProvider<D, C, A>) -> AurumListBinding<S, AurumCollectionBaseConnector<D, C, A>>{
-    let connector = AurumCollectionBaseConnector(size: right.size, setuper: right.setup)
-    right.collection.connector = connector
-    connector.reloadList = right.collection.reloadData
-    return AurumListBinding(extractor: left, connector: connector)
-}
-
-//Table
-public func *><S: AurumState, LC: AurumTableConnector>(left: @escaping (S) -> [LC.Data], right: (UITableView, LC)) -> AurumListBinding<S, LC>{
-    right.0.connector = right.1
-    right.1.reloadList = right.0.reloadData
-    return AurumListBinding(extractor: left, connector: right.1)
-}
-
-public func *><S: AurumState, D: Equatable, C: UITableViewCell, A: AurumAction>(left: @escaping (S) -> [D], right: AurumTableProvider<D, C, A>) -> AurumListBinding<S, AurumTableBaseConnector<D, C, A>>{
-    let connector = AurumTableBaseConnector(setuper: right.setup)
-    right.table.connector = connector
-    connector.reloadList = right.table.reloadData
-    return AurumListBinding(extractor: left, connector: connector)
+public func *><S: AurumState, LC: AurumSectionListConnectorType>(left: ((S) -> [LC.Data], (LC.Data) -> [LC.Item]), right: LC) -> AurumListBinding<S, LC>{
+    return AurumSectionListBinding(sectionExtractor: left.0, itemExtractor: left.1, connector: right)
 }
 
 //Create full binding: ListBinding -> Action
-public func *><S: AurumState, LC: AurumListConnector>(left: AurumListBinding<S, LC>, right: @escaping (Int) -> LC.Action?) -> AurumBinding<S, LC.Action>{
-    left.action = right
+public func *><S: AurumState, LC: AurumListConnectorType>(left: AurumListBinding<S, LC>, right: @escaping (Int) -> LC.Action?) -> AurumBinding<S, LC.Action>{
+    left.cellAction = right
+    return left
+}
+
+public func *><S: AurumState, LC: AurumSectionListConnectorType>(left: AurumSectionListBinding<S, LC>, right: ((Int) -> LC.Action?, (Int) -> LC.Action?)) -> AurumBinding<S, LC.Action>{
+    left.sectionAction = right.0
+    left.cellAction = right.1
     return left
 }
 
