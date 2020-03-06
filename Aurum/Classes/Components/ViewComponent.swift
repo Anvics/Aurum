@@ -38,7 +38,8 @@ public class ViewData: AurumComponentData, AurumDataCreatable{
 
 public func ==(left: ViewData, right: ViewData) -> Bool{
     return left.backgroundColor == right.backgroundColor &&
-        left.isHidden == right.isHidden
+        left.isHidden == right.isHidden &&
+        left.alpha == right.alpha
 }
 
 extension UIView: AurumBaseComponent{

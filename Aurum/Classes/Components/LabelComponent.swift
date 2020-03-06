@@ -51,6 +51,7 @@ public func ==(left: LabelData, right: LabelData) -> Bool{
         left.textColor == right.textColor &&
         left.font == right.font &&
         left.backgroundColor == right.backgroundColor &&
+        left.alpha == right.alpha &&
         left.isHidden == right.isHidden
 }
 

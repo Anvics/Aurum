@@ -41,6 +41,7 @@ public class ImageData: AurumComponentData, AurumDataCreatable{
 public func ==(left: ImageData, right: ImageData) -> Bool{
     return left.image == right.image &&
         left.backgroundColor == right.backgroundColor &&
+        left.alpha == right.alpha &&
         left.isHidden == right.isHidden
 }
 

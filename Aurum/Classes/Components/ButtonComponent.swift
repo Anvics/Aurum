@@ -59,6 +59,8 @@ public func ==(left: ButtonData, right: ButtonData) -> Bool{
         left.image == right.image &&
         left.backgroundImage == right.backgroundImage &&
         left.backgroundColor == right.backgroundColor &&
+        left.alpha == right.alpha &&
+        left.isEnabled == right.isEnabled &&
         left.isHidden == right.isHidden
 }
 
