@@ -27,7 +27,7 @@ public protocol AurumSectionListConnectorType: AurumListConnectorType{
     var sectionPressed: CellPressedListener? { get set }
 }
 
-public class AurumCollectionConnector<Model: Equatable, Cell: UICollectionViewCell, Action: AurumAction>: NSObject, AurumListConnectorType, UICollectionViewDelegateFlowLayout{
+public class AurumCollectionConnector<Model: Equatable, Cell: UICollectionViewCell, Action: AurumAction>: NSObject, AurumListConnectorType, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource{
     public typealias Setuper = (Cell, Model, [Model], Int, Reducer) -> Void
     
     let setuper: Setuper
