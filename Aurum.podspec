@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'Aurum'
-  s.version          = '1.2.15'
+  s.version          = '1.2.16'
   s.summary          = 'Evolution of Amber architecture'
 
 # This description is used to generate tags and improve search results.
@@ -29,6 +29,7 @@ TODO: Add long description of the pod here.
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
   s.ios.deployment_target = '10.0'
+  s.osx.deployment_target = '10.12'
   s.swift_version = '5.0'
 
   s.source_files = 'Aurum/Classes/**/*'
